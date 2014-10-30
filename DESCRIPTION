@@ -1,0 +1,10 @@
+Package: gtStats
+Type: Package
+Title: Higher Level Statistical Functions for Grokit
+Version: 1.0
+Date: 2013-10-10
+Author: Jon Claus
+Maintainer: Jon Claus <jonathanmclaus@gmail.com>
+Depends: gtBase, gtJson
+Description: This package includes advanced statistical and data mining methods for processing data in the grokit system. Only meta-GLAs and very basic GLAs, such as median, are located in the gtBase library.
+License: Proprietary

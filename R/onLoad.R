@@ -1,0 +1,2 @@
+.onAttach <- function(libname, pkgname) {
+}
