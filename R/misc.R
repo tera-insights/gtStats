@@ -50,7 +50,7 @@ extract.exprs <- function(expr) {
   else if (is.call(expr))
     if (is.symbol(expr[[1]]) && expr[[1]] == "I")
       if (length(expr) != 2)
-        Stop("AsIs is an urnary function.")
+        stop("AsIs is an urnary function.")
       else
         expr[[2]]
     else

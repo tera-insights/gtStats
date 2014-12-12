@@ -12,10 +12,10 @@ Covariance <- cov.data <- function(data, inputs = AUTO, outputs = result) {
   outputs <- substitute(outputs)
   check.atts(outputs)
   if (is.auto(outputs))
-    Stop("outputs not allowed to be AUTO.")
+    stop("outputs not allowed to be AUTO.")
   outputs <- convert.atts(outputs)
   if (length(outputs) != 1)
-    Stop("There must be exactly one output specified.")
+    stop("There must be exactly one output specified.")
 
   agg <- Aggregate(data, GLA(statistics::CovCor_Matrix, which = "cov"), inputs, outputs)
 
@@ -44,10 +44,10 @@ Correlation <- cor.data <- function(data, inputs = AUTO, outputs = result) {
   outputs <- substitute(outputs)
   check.atts(outputs)
   if (is.auto(outputs))
-    Stop("outputs not allowed to be AUTO.")
+    stop("outputs not allowed to be AUTO.")
   outputs <- convert.atts(outputs)
   if (length(outputs) != 1)
-    Stop("There must be exactly one output specified.")
+    stop("There must be exactly one output specified.")
 
   agg <- Aggregate(data, GLA(statistics::CovCor_Matrix, which = "cor"), inputs, outputs)
 
@@ -77,10 +77,10 @@ covcor.data <- function(data, inputs = AUTO, outputs = result) {
   outputs <- substitute(outputs)
   check.atts(outputs)
   if (is.auto(outputs))
-    Stop("outputs not allowed to be AUTO.")
+    stop("outputs not allowed to be AUTO.")
   outputs <- convert.atts(outputs)
   if (length(outputs) != 1)
-    Stop("There must be exactly one output specified.")
+    stop("There must be exactly one output specified.")
 
   agg <- Aggregate(data, GLA(statistics::CovCor_Matrix, which = "both"), inputs, outputs)
 

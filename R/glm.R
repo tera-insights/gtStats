@@ -8,10 +8,10 @@ GLM <- function(data, ..., model = NULL, outputs = result) {
   outputs <- substitute(outputs)
   check.atts(outputs)
   if (is.auto(outputs))
-    Stop("outputs not allowed to be AUTO.")
+    stop("outputs not allowed to be AUTO.")
   outputs <- convert.atts(outputs)
   if (length(outputs) != 1)
-    Stop("There must be exactly one output specified.")
+    stop("There must be exactly one output specified.")
 
   constructor <- GLMMake(..., model = is.null(model))
   terms <- unlist(lapply(grokit$expressions[unlist(constructor$GLA$args$predictors)], deparse))
@@ -54,14 +54,14 @@ GLMMake <- function(formula, family = gaussian, weights = NULL, start = NULL,
   ## only first start parameter accepted
   if (!is.null(start)) {
     if (!is.numeric(start))
-      Stop("start must be a numeric vector or null.")
+      stop("start must be a numeric vector or null.")
     eta.start <- mu.start <- FALSE
   } else if (!is.null(eta.start)) {
     eta.start <- substitute(eta.start)
     check.exprs(eta.start)
     eta.start <- convert.exprs(eta.start)
     if (length(eta.start) != 1)
-      Stop("eta.start must be a single expression or NULL.")
+      stop("eta.start must be a single expression or NULL.")
     inputs <- c(inputs, eta.start)
     mu.start <- start <- FALSE
   } else if (!is.null(mu.start)) {
@@ -69,7 +69,7 @@ GLMMake <- function(formula, family = gaussian, weights = NULL, start = NULL,
     check.exprs(mu.start)
     mu.start <- convert.exprs(mu.start)
     if (length(mu.start) != 1)
-      Stop("mu.start must be a single expression or NULL.")
+      stop("mu.start must be a single expression or NULL.")
     inputs <- c(inputs, mu.start)
     eta.start <- start <- FALSE
   } else {
@@ -81,7 +81,7 @@ GLMMake <- function(formula, family = gaussian, weights = NULL, start = NULL,
     check.exprs(weights)
     weights <- convert.exprs(weights)
     if (length(weights) != 1)
-      Stop("weights must be a single expression or NULL.")
+      stop("weights must be a single expression or NULL.")
     inputs <- c(inputs, weights)
   } else {
     weights <- FALSE
@@ -92,7 +92,7 @@ GLMMake <- function(formula, family = gaussian, weights = NULL, start = NULL,
     check.exprs(offset)
     offset <- convert.exprs(offset)
     if (length(offsets) != 1)
-      Stop("offset must be a single expression or NULL.")
+      stop("offset must be a single expression or NULL.")
     inputs <- c(inputs, offset)
   } else {
     offset <- FALSE

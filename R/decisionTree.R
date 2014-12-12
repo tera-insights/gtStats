@@ -14,9 +14,9 @@ DecisionTree <- function(data, response, regression, continuous, categorical, ou
   cont.reg <- length(as.exprs(regression))
 
   if (is.auto(response) || is.auto(continuous) || is.auto(categorical))
-    Stop("response, continuous, and categorical cannot be AUTO")
+    stop("response, continuous, and categorical cannot be AUTO")
   if (length(as.exprs(response)) != 1)
-    Stop("a single response expression must be given")
+    stop("a single response expression must be given")
 
   categorical <- as.call(c(call("[", substitute(statistics::MakeVector)), as.exprs(categorical)))
   continuous <- as.call(c(call("[", substitute(statistics::MakeVector)),

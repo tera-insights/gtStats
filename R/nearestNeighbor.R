@@ -8,13 +8,13 @@ NearestNeighbor <- function(data, state, inputs = AUTO, outputs, normalization =
   outputs <- substitute(outputs)
   check.atts(outputs)
   if (is.auto(outputs))
-    Stop("outputs not allowed to be AUTO.")
+    stop("outputs not allowed to be AUTO.")
   outputs <- convert.atts(outputs)
 
   if (length(outputs) != 1)
-    Stop("There must be exactly one output specified.")
+    stop("There must be exactly one output specified.")
   if (length(inputs) != 1)
-    Stop("There must be exactly one input specified.")
+    stop("There must be exactly one input specified.")
 
   gt <- GT(statistics::Nearest_Neighbor,
            normalization = normalization)
