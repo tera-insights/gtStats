@@ -1,8 +1,6 @@
-glm <- function(x, ...) UseMethod("glm")
+glm <- function(...) UseMethod("glm")
 
 glm.default <- stats::glm
-
-glm.data <- function(x, ...) GLM(x, ...)
 
 GLM <- function(data, ..., model = NULL, outputs = result) {
   outputs <- substitute(outputs)
@@ -33,6 +31,8 @@ GLM <- function(data, ..., model = NULL, outputs = result) {
   ##   result
   ## }
 }
+
+glm.data <- GLM
 
 GLMMake <- function(formula, family = gaussian, weights = NULL, start = NULL,
                     eta.start = NULL, mu.start = NULL, offset = NULL,

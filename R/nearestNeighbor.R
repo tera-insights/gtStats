@@ -1,14 +1,10 @@
-NearestNeighbor <- function(data, state, inputs = AUTO, outputs, normalization = TRUE) {
+NearestNeighbor <- function(data, state, inputs, outputs, normalization = TRUE) {
   inputs <- substitute(inputs)
-  check.exprs(inputs)
-  if (is.auto(inputs))
-    inputs <- convert.schema(data$schema)
+  check.exprs(inputs, FALSE)
   inputs <- convert.exprs(inputs)
 
   outputs <- substitute(outputs)
-  check.atts(outputs)
-  if (is.auto(outputs))
-    stop("outputs not allowed to be AUTO.")
+  check.atts(outputs, FALSE)
   outputs <- convert.atts(outputs)
 
   if (length(outputs) != 1)
