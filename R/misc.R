@@ -58,3 +58,10 @@ extract.exprs <- function(expr) {
   else
     NULL
 }
+
+## Takes a list of inputs and places the UDF MakeVector on top of them.
+vectorize <- function(exprs, type = double) {
+  if (is.character(exprs))
+    exprs <- get.exprs(exprs)
+  convert.exprs(as.call(c(substitute(statistics::MakeVector[type = TYPE(type)]), exprs)))
+}
