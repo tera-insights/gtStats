@@ -5,13 +5,13 @@ RandomForest.data <- function(data, predictors, response, file = F,  ...) {
   check.exprs(predictors)
   if (is.auto(predictors))
     predictors <- convert.schema(data$schema)
-  predictors <- convert.exprs(predictors)
+  predictors <- convert.exprs(predictors, data)
 
   response <- substitute(response)
   check.exprs(response)
   if (is.auto(response))
     response <- convert.schema(data$schema)
-  response <- convert.exprs(response)
+  response <- convert.exprs(response, data)
 
   constructor <- RandomForestMake(...)
   structure(add.class(Aggregate(data, constructor$GLA,
@@ -74,9 +74,21 @@ RandomForestPredict <- function(data, file = F, inputs, outputs) {
   Transform(data, gt, inputs, outputs)
 }
 
-BatchPredict <- function(model, data, outputs, extra) {
-  inputs <- attr(model, "predictors")
-  response <- attr(model, "response")
+BatchPredict <- function(training, features, response, data, predictors, outputs, extra, ...) {
+  features <- substitute(features)
+  check.exprs(features, FALSE)
+  features <- convert.exprs(features, training)
+
+  inputs <- setNames(get.exprs(features), NULL)
+
+  response <- substitute(response)
+  check.exprs(response, FALSE)
+  response <- convert.exprs(response, training)
+  response <- setNames(get.exprs(response), NULL)
+
+  predictors <- substitute(predictors)
+  check.exprs(predictors, FALSE)
+  predictors <- convert.exprs(predictors, training)
 
   if (missing(outputs)) {
     if (is.symbol(response))
@@ -102,11 +114,24 @@ BatchPredict <- function(model, data, outputs, extra) {
       extra <- subtract(names(data$schema), as.character(inputs[is.symbols(inputs)]))
     else
       extra.atts <- convert.atts(extra)
-    extra <- vectorize(as.symbols(extra.atts))
+    extra <- tuple(as.symbols(extra.atts))
   }
 
-  agg <- Aggregate(data, GLA(statistics::Random_Forest_Batch),
-                   c(extra, vectorize(inputs)),
-                   c(extra.atts, as.character(inputs), outputs),
-                   model)
+  training <- Aggregate(training, GLA(statistics::Gather),
+                        c(vectorize(features, float), tuple(call("FLOAT", response[[1]]))),
+                        character())
+
+  predicting <- Aggregate(data, GLA(statistics::Gather),
+                          c(vectorize(predictors), extra),
+                          character())
+
+  Transition(BatchPredictMake(...), c(extra.atts, as.character(inputs), outputs),
+             list(training, predicting))
+}
+
+BatchPredictMake <- function(num.vars = 0, max.depth = 25, min.sample = 100, node.epsilon = 0.01,
+                             max.categories = 15, num.trees = 100, tree.epsilon = 0.01) {
+  GIST(statistics::Random_Forest_Batch,
+       num.vars = num.vars, max.depth = max.depth, min.sample = min.sample, node.epsilon = node.epsilon,
+       max.categories = max.categories, num.trees = num.trees, tree.epsilon = tree.epsilon)
 }
