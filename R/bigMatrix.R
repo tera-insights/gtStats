@@ -1,4 +1,4 @@
-BigMatrix <- function(data, inputs, outputs, block = 40, scale = 2) {
+BigMatrix <- function(data, inputs, outputs, block = 40, scale = 2, diag = TRUE) {
   inputs <- substitute(inputs)
   check.exprs(inputs)
   if (is.auto(inputs))
@@ -16,7 +16,7 @@ BigMatrix <- function(data, inputs, outputs, block = 40, scale = 2) {
   if (length(outputs) != 3)
     stop("3 outputs expected.")
 
-  gla <- GLA(statistics::Big_Matrix, block = block, scale = scale)
+  gla <- GLA(statistics::Big_Matrix, block = block, scale = scale, diag = diag)
 
   Aggregate(data, gla, inputs, outputs)
 }
