@@ -2,15 +2,11 @@ RandomForest <- function(...) UseMethod("RandomForest")
 
 RandomForest.data <- function(data, predictors, response, file = F,  ...) {
   predictors <- substitute(predictors)
-  check.exprs(predictors)
-  if (is.auto(predictors))
-    predictors <- convert.schema(data$schema)
+  check.exprs(predictors, FALSE)
   predictors <- convert.exprs(predictors, data)
 
   response <- substitute(response)
   check.exprs(response)
-  if (is.auto(response))
-    response <- convert.schema(data$schema)
   response <- convert.exprs(response, data)
 
   constructor <- RandomForestMake(...)
