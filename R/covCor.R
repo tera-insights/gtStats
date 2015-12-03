@@ -1,18 +1,12 @@
-cov <- function(x, ...) UseMethod("cov")
-
-cov.default <- stats::cov
-
-Covariance <- cov.data <- function(data, inputs = AUTO, outputs = result) {
-  inputs <- substitute(inputs)
-  check.exprs(inputs)
-  if (is.auto(inputs))
+Covariance <- cov.data <- function(data, inputs, outputs = result) {
+  if (missing(inputs))
     inputs <- convert.schema(data$schema)
+  else
+    inputs <- substitute(inputs)
   inputs <- convert.exprs(inputs)
 
   outputs <- substitute(outputs)
   check.atts(outputs)
-  if (is.auto(outputs))
-    stop("outputs not allowed to be AUTO.")
   outputs <- convert.atts(outputs)
   if (length(outputs) != 1)
     stop("There must be exactly one output specified.")
@@ -30,54 +24,41 @@ Covariance <- cov.data <- function(data, inputs = AUTO, outputs = result) {
   ## }
 }
 
-cor <- function(x, ...) UseMethod("cor")
-
-cor.default <- stats::cor
-
-Correlation <- cor.data <- function(data, inputs = AUTO, outputs = result) {
-  inputs <- substitute(inputs)
-  check.exprs(inputs)
-  if (is.auto(inputs))
+Correlation <- function(data, inputs, outputs = result) {
+  if (missing(inputs))
     inputs <- convert.schema(data$schema)
+  else
+    inputs <- substitute(inputs)
   inputs <- convert.exprs(inputs)
 
   outputs <- substitute(outputs)
   check.atts(outputs)
-  if (is.auto(outputs))
-    stop("outputs not allowed to be AUTO.")
   outputs <- convert.atts(outputs)
   if (length(outputs) != 1)
     stop("There must be exactly one output specified.")
 
   agg <- Aggregate(data, GLA(statistics::CovCor_Matrix, which = "cor"), inputs, outputs)
 
-  if (exists("grokit.jobid") && !force.frame) {
-    View(agg)
-  } else {
-    result <- as.object(agg)$content[[1]][[1]]
-    terms <- unlist(lapply(grokit$expressions[inputs], deparse))
-    cor <- matrix(result$correlation$data, result$correlation$n_cols, result$correlation$n_rows)
-    rownames(cor) <- colnames(cor) <- terms
-    cor
-  }
+  ## if (exists("grokit.jobid") && !force.frame) {
+  ##   View(agg)
+  ## } else {
+  ##   result <- as.object(agg)$content[[1]][[1]]
+  ##   terms <- unlist(lapply(grokit$expressions[inputs], deparse))
+  ##   cor <- matrix(result$correlation$data, result$correlation$n_cols, result$correlation$n_rows)
+  ##   rownames(cor) <- colnames(cor) <- terms
+  ##   cor
+  ## }
 }
 
-
-covcor <- function(x, ...) UseMethod("covcor")
-
-covcor.default <- function(...) list(cov = stats::cov(...), cor = stats::cor(...))
-
-covcor.data <- function(data, inputs = AUTO, outputs = result) {
-  inputs <- substitute(inputs)
-  check.exprs(inputs)
-  if (is.auto(inputs))
+CovCor <- function(data, inputs, outputs = result) {
+  if (missing(inputs))
     inputs <- convert.schema(data$schema)
+  else
+    inputs <- substitute(inputs)
   inputs <- convert.exprs(inputs)
 
   outputs <- substitute(outputs)
   check.atts(outputs)
-  if (is.auto(outputs))
-    stop("outputs not allowed to be AUTO.")
   outputs <- convert.atts(outputs)
   if (length(outputs) != 1)
     stop("There must be exactly one output specified.")

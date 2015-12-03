@@ -2,7 +2,7 @@ RandomForest <- function(...) UseMethod("RandomForest")
 
 RandomForest.data <- function(data, predictors, response, file = F,  ...) {
   predictors <- substitute(predictors)
-  check.exprs(predictors, FALSE)
+  check.exprs(predictors)
   predictors <- convert.exprs(predictors, data)
 
   response <- substitute(response)
@@ -21,7 +21,7 @@ RandomForest.formula <- function(formula, data, ...) {
 }
 
 RandomForestMake <- function(file = F, num.vars = 0, max.depth = 25, min.sample = 100, node.epsilon = 0.01,
-                             max.categories = 15, num.trees = 100, tree.epsilon = 0.01) {
+                             max.categories = 15, num.trees = 100, tree.epsilon = 0) {
   list(GLA = GLA(statistics::Random_Forest,
            file = file, num.vars = num.vars, max.depth = max.depth, min.sample = min.sample,
            node.epsilon = node.epsilon, max.categories = max.categories, num.trees = num.trees,
@@ -46,7 +46,7 @@ Predict.rf <- function(model, data, outputs) {
       stop("response variable was not originally named and must be given.")
   } else {
     outputs <- substitute(outputs)
-    check.atts(outputs, FALSE)
+    check.atts(outputs)
     outputs <- convert.atts(outputs)
     assert(length(outputs) == 1, "a single output must be given.")
   }
@@ -56,14 +56,14 @@ Predict.rf <- function(model, data, outputs) {
 }
 
 RandomForestPredict <- function(data, file = F, inputs, outputs) {
-  inputs <- substitute(inputs)
-  check.exprs(inputs)
-  if (is.auto(inputs))
+  if (missing(inputs))
     inputs <- convert.schema(data$schema)
+  else
+    inputs <- substitute(inputs)
   inputs <- convert.exprs(inputs)
 
   outputs <- substitute(outputs)
-  check.atts(outputs, FALSE)
+  check.atts(outputs)
   outputs <- convert.atts(outputs)
 
   gt <- GT(statistics::Random_Forest_Predict, file = file)
@@ -72,18 +72,18 @@ RandomForestPredict <- function(data, file = F, inputs, outputs) {
 
 BatchPredict <- function(training, features, response, data, predictors, outputs, extra, ...) {
   features <- substitute(features)
-  check.exprs(features, FALSE)
+  check.exprs(features)
   features <- convert.exprs(features, training)
 
   inputs <- setNames(get.exprs(features), NULL)
 
   response <- substitute(response)
-  check.exprs(response, FALSE)
+  check.exprs(response)
   response <- convert.exprs(response, training)
   response <- setNames(get.exprs(response), NULL)
 
   predictors <- substitute(predictors)
-  check.exprs(predictors, FALSE)
+  check.exprs(predictors)
   predictors <- convert.exprs(predictors, training)
 
   if (missing(outputs)) {
@@ -96,7 +96,7 @@ BatchPredict <- function(training, features, response, data, predictors, outputs
       stop("response variable was not originally named and must be given.")
   } else {
     outputs <- substitute(outputs)
-    check.atts(outputs, FALSE)
+    check.atts(outputs)
     outputs <- convert.atts(outputs)
     assert(length(outputs) == 1, "a single output must be given.")
   }
@@ -106,10 +106,7 @@ BatchPredict <- function(training, features, response, data, predictors, outputs
   } else {
     extra <- substitute(extra)
     check.atts(extra)
-    if (is.auto(extra))
-      extra <- subtract(names(data$schema), as.character(inputs[is.symbols(inputs)]))
-    else
-      extra.atts <- convert.atts(extra)
+    extra.atts <- convert.atts(extra)
     extra <- tuple(as.symbols(extra.atts))
   }
 

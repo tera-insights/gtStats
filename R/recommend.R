@@ -1,4 +1,4 @@
-Recommend <- function(..., outputs = error) {
+Recommend <- function(data, ..., outputs = error) {
   gby1 <- eval(call("GroupBy", Read(gs_streams), groupAtts = as.symbol("songid"),
                     substitute(Count(inputs = tsadded, outputs = Count1))))
   gby2 <- eval(call("GroupBy", Read(gs_streams), groupAtts = as.symbol("userid"),
@@ -6,16 +6,15 @@ Recommend <- function(..., outputs = error) {
   data <- eval(call("GroupBy", Read(gs_streams), groupAtts = substitute(c(userid, songid)),
                     substitute(Count(inputs = tsadded, outputs = Count3))))
 
-  inputs <- substitute(c(userid, songid, Count3))
-  check.exprs(inputs)
-  if (is.auto(inputs))
-    inputs <- convert.schema(x$schema)
+  if (missing(inputs))
+    inputs <- convert.schema(data$schema)
+  else
+    inputs <- substitute(inputs)
   inputs <- convert.exprs(inputs)
+
 
   outputs <- substitute(outputs)
   check.atts(outputs)
-  if (is.auto(outputs))
-    stop("outputs not allowed to be AUTO.")
   outputs <- convert.atts(outputs)
   if (length(outputs) != 1)
     stop("There must be exactly one output specified.")

@@ -1,19 +1,26 @@
 ReservoirSample <- function(data, size, inputs = AUTO, outputs = AUTO, coefficient = 22) {
-  inputs <- substitute(inputs)
-  check.exprs(inputs)
-  if (is.auto(inputs))
+  if (missing(inputs)) {
     inputs <- convert.schema(names(data$schema))
-  inputs <- convert.exprs(inputs, data)
+  } else {
+    inputs <- substitute(inputs)
+    check.exprs(inputs)
+    inputs <- convert.exprs(inputs)
+  }
 
-  outputs <- substitute(outputs)
-  check.atts(outputs)
-  if (is.auto(outputs))
-    if (all(is.symbols(grokit$expressions[inputs])))
-      outputs <- unlist(lapply(grokit$expressions[inputs], as.character))
+  if (missing(outputs)) {
+    outputs <- convert.names(inputs)
+    missing <- which(outputs == "")
+    exprs <- grokit$expressions[inputs[missing]]
+    if (all(is.symbols(exprs)))
+      outputs[missing] <- as.character(exprs)
     else
-      stop("outputs can only be AUTO when inputs are all attributes.")
-  else
-    outputs <- convert.atts(outputs)
+      stop("no name given for complex inputs:",
+           paste("\n\t", lapply(exprs, deparse), collapse = ""))
+  } else {
+    if (!is.null(names(inputs)))
+      warning("both outputs and named inputs given. outputs used.")
+    outputs <- convert.atts(substitute(outputs))
+  }
   if (length(outputs) != length(inputs))
     stop("There must be exactly one output specified per input.")
 
@@ -24,14 +31,15 @@ ReservoirSample <- function(data, size, inputs = AUTO, outputs = AUTO, coefficie
 
 SimpleSample <- function(data, size, inputs = AUTO, outputs = AUTO) {
   inputs <- substitute(inputs)
-  check.exprs(inputs)
-  if (is.auto(inputs))
-    inputs <- convert.schema(names(data$schema))
-  inputs <- convert.exprs(inputs, data)
+  if (missing(inputs))
+    inputs <- convert.schema(data$schema)
+  else
+    inputs <- substitute(inputs)
+  inputs <- convert.exprs(inputs)
 
   outputs <- substitute(outputs)
   check.atts(outputs)
-  if (is.auto(outputs))
+  if (missing(outputs))
     if (all(is.symbols(grokit$expressions[inputs])))
       outputs <- unlist(lapply(grokit$expressions[inputs], as.character))
     else

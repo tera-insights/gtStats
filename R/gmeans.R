@@ -1,15 +1,13 @@
 GMeans <- function(data, p = 2, alpha = 0.01, epsilon = 0.001,
                    inputs = AUTO, outputs = result) {
-  inputs <- substitute(inputs)
-  check.exprs(inputs)
-  if (is.auto(inputs))
+  if (missing(inputs))
     inputs <- convert.schema(data$schema)
+  else
+    inputs <- substitute(inputs)
   inputs <- convert.exprs(inputs)
 
   outputs <- substitute(outputs)
   check.atts(outputs)
-  if (is.auto(outputs))
-    stop("outputs not allowed to be AUTO.")
   outputs <- convert.atts(outputs)
   if (length(outputs) != 1)
     stop("There must be exactly one output specified.")

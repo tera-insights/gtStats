@@ -1,8 +1,6 @@
 NBC <- function(data, ..., outputs = result) {
   outputs <- substitute(outputs)
   check.atts(outputs)
-  if (is.auto(outputs))
-    stop("outputs not allowed to be AUTO.")
   outputs <- convert.atts(outputs)
   if (length(outputs) != 1)
     stop("There must be exactly one output specified.")
@@ -14,23 +12,20 @@ NBC <- function(data, ..., outputs = result) {
 }
 
 NBCMake <- function(predictors, response, range = 500, bins = 10) {
+  if (missing(predictors))
+    predictors <- convert.schema(data$schema)
+  else
     predictors <- substitute(predictors)
-    check.exprs(predictors)
-    if (is.auto(predictors))
-      stop("predictors not allowed to be AUTO.")
-    response <- substitute(response)
-    check.atts(response)
-    if (is.auto(response))
-      stop("response not allowed to be AUTO.")
-    inputs <- c(convert.exprs(predictors), convert.exprs(response))
-    response <- convert.atts(response)
+  predictors <- convert.exprs(predictors)
 
-    GLA <- GLA(
-        statistics::Naive_Bayes_Classifier,
-        histogram.width.factor = range,
-        number.bins = bins,
-        response = as.character(response)
-        )
+  response <- substitute(response)
+  inputs <- c(convert.exprs(predictors), convert.exprs(response))
+  response <- convert.atts(response)
 
-    list(GLA = GLA, inputs = inputs)
+  GLA <- GLA(statistics::Naive_Bayes_Classifier,
+             histogram.width.factor = range,
+             number.bins = bins,
+             response = as.character(response))
+
+  list(GLA = GLA, inputs = inputs)
 }

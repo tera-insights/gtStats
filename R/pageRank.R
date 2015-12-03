@@ -1,4 +1,4 @@
-BigMatrix <- function(data, inputs, outputs, block = 40, scale = 2, diag = TRUE) {
+PageRank <- function(data, inputs, outputs, block = 40, scale = 2, adj = TRUE, hash = TRUE) {
   if (missing(inputs))
     inputs <- convert.schema(data$schema)
   else
@@ -11,10 +11,10 @@ BigMatrix <- function(data, inputs, outputs, block = 40, scale = 2, diag = TRUE)
   outputs <- substitute(outputs)
   check.atts(outputs)
   outputs <- convert.atts(outputs)
-  if (length(outputs) != 3)
-    stop("3 outputs expected.")
+  if (length(outputs) != 2)
+    stop("2 outputs expected.")
 
-  gla <- GLA(statistics::Big_Matrix, block = block, scale = scale, diag = diag)
+  gla <- GLA(statistics::Page_Rank, block = block, scale = scale, adj = adj, hash = hash)
 
   Aggregate(data, gla, inputs, outputs)
 }

@@ -1,8 +1,8 @@
 LineChart <- function(data, inputs, outputs, length, normalize = FALSE, p = 2) {
-  inputs <- substitute(inputs)
-  check.exprs(inputs)
-  if (is.auto(inputs))
+  if (missing(inputs))
     inputs <- convert.schema(data$schema)
+  else
+    inputs <- substitute(inputs)
   inputs <- convert.exprs(inputs)
 
   if (missing(length))
@@ -11,8 +11,6 @@ LineChart <- function(data, inputs, outputs, length, normalize = FALSE, p = 2) {
   if (length(inputs) == 2) {
     outputs <- substitute(outputs)
     check.atts(outputs)
-    if (is.auto(outputs))
-      stop("outputs not allowed to be AUTO.")
     outputs <- convert.atts(outputs)
     if (length(outputs) != 1)
       stop("There must be exactly one output specified.")

@@ -1,16 +1,16 @@
 PreProcess <- function(data, inputs = AUTO, outputs = AUTO, normalize = F,
                        vectorize = T, center = F, scale = F, range = F) {
-  inputs <- substitute(inputs)
-  check.exprs(inputs)
-  if (is.auto(inputs))
+  if (missing(inputs))
     inputs <- convert.schema(data$schema)
+  else
+    inputs <- substitute(inputs)
   inputs <- vectorize(convert.exprs(inputs))
 
   args <- num.args(get.exprs(inputs))
 
   outputs <- substitute(outputs)
   check.atts(outputs)
-  if (is.auto(outputs))
+  if (missing(outputs))
     if (all(is.symbols(get.args(get.exprs(inputs)))))
       outputs <- unlist(lapply(grokit$expressions[inputs], as.character))
     else

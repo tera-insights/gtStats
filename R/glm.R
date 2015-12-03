@@ -5,8 +5,6 @@ glm.default <- stats::glm
 GLM <- function(data, ..., model = NULL, outputs = result) {
   outputs <- substitute(outputs)
   check.atts(outputs)
-  if (is.auto(outputs))
-    stop("outputs not allowed to be AUTO.")
   outputs <- convert.atts(outputs)
   if (length(outputs) != 1)
     stop("There must be exactly one output specified.")

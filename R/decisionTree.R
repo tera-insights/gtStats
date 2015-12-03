@@ -12,9 +12,7 @@ DecisionTree <- function(data, response, regression, continuous, categorical, ou
 
   cont.split <- length(as.exprs(continuous))
   cont.reg <- length(as.exprs(regression))
-
-  if (is.auto(response) || is.auto(continuous) || is.auto(categorical))
-    stop("response, continuous, and categorical cannot be AUTO")
+  
   if (length(as.exprs(response)) != 1)
     stop("a single response expression must be given")
 
@@ -29,12 +27,12 @@ DecisionTree <- function(data, response, regression, continuous, categorical, ou
 
   outputs <- substitute(outputs)
   check.atts(outputs)
-  if (is.auto(outputs))
+  if (missing(outputs))
     outputs <- "result"
   else
     outputs <- convert.atts(outputs)
 
-  gla <- TemplateFunction(GLA, statistics::Decision_Tree,
+  gla <- GLA(statistics::Decision_Tree,
              split = split,
              threshold = threshold,
              conv.limit = conv.limit,
@@ -43,8 +41,7 @@ DecisionTree <- function(data, response, regression, continuous, categorical, ou
              em.learn.iters = em.learn.iters,
              em.max.trials = em.max.trials,
              cont.split = cont.split,
-             cont.reg = cont.reg
-             )
+             cont.reg = cont.reg)
 
   Aggregate(data, gla, inputs, outputs)
 }
