@@ -7,7 +7,7 @@ Expand <- function(data, inputs, outputs) {
   check.atts(outputs)
   outputs <- convert.atts(outputs)
 
-  if (length(outputs) != length(inputs))
+  if (!((length(outputs) - length(inputs)) %in% 0:1))
     stop("There must be an equal number of outputs and inputs.")
 
   gt <- GT(statistics::Expand)
