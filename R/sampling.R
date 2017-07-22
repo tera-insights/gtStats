@@ -53,3 +53,30 @@ SimpleSample <- function(data, size, inputs = AUTO, outputs = AUTO) {
 
   Aggregate(data, gla, inputs, outputs)
 }
+
+MemoryConsciousSampling <- function(data, minimumGroupSize,
+  maximumGroupsAllowed, initialSamplingRate, reductionRate, inputs = AUTO,
+  outputs = AUTO) {
+  if (missing(inputs))
+    inputs <- convert.schema(data$schema)
+  else
+    inputs <- substitute(inputs)
+  inputs <- convert.exprs(inputs)
+
+  outputs <- substitute(outputs)
+  check.atts(outputs)
+  if (missing(outputs)) {
+    outputs <- convert.atts(c(inputs, "sampling_rate"))
+  }
+
+  if (length(outputs) != 1 + length(inputs)) {
+    stop("There must be exactly one output for each input, and one output " +
+      "for the sampling rate.")
+  }
+
+  gla <- GLA(statistics::Memory_Conscious_Sampling,
+    minimumGroupSize = minimumGroupSize,
+    maximumGroupsAllowed = maximumGroupsAllowed
+    initialSamplingRate = initialSamplingRate,
+    reductionRate = reductionRate)
+}
