@@ -76,7 +76,7 @@ MemoryConsciousSampling <- function(data, minimumGroupSize,
 
   gla <- GLA(statistics::Memory_Conscious_Sampling,
     minimumGroupSize = minimumGroupSize,
-    maximumGroupsAllowed = maximumGroupsAllowed
+    maximumGroupsAllowed = maximumGroupsAllowed,
     initialSamplingRate = initialSamplingRate,
     reductionRate = reductionRate)
 }
