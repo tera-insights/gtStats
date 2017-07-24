@@ -83,3 +83,33 @@ MemoryConsciousSampling <- function(data, minimumGroupSize,
 
   Aggregate(data, gla, inputs, outputs)
 }
+
+MemoryConsciousHashing <- function(data, initialThreshold,
+  thresholdGrowthFactor, maxProducedGroups, dieProbability, inputs = AUTO,
+  outputs = AUTO) {
+  if (missing(inputs))
+    inputs <- convert.schema(data$schema)
+  else
+    inputs <- substitute(inputs)
+  inputs <- convert.exprs(inputs)
+
+  outputs <- substitute(outputs)
+  check.atts(outputs)
+  if (missing(outputs))
+    if (all(is.symbols(grokit$expressions[inputs])))
+      outputs <- unlist(lapply(grokit$expressions[inputs], as.character))
+    else
+      stop("outputs can only be AUTO when inputs are all attributes.")
+  else
+    outputs <- convert.atts(outputs)
+  if (length(outputs) != length(inputs))
+    stop("There must be exactly one output specified per input.")
+
+  gla <- GLA(statistics::Memory_Conscious_Sampling,
+    initialThreshold = initialThreshold,
+    thresholdGrowthFactor = thresholdGrowthFactor,
+    maxProducedGroups = maxProducedGroups,
+    dieProbability = dieProbability)
+
+  Aggregate(data, gla, inputs, outputs)
+}
