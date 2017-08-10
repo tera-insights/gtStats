@@ -83,3 +83,31 @@ MemoryConsciousSampling <- function(data, minimumGroupSize,
 
   Aggregate(data, gla, inputs, outputs)
 }
+
+MemoryConsciousHashing <- function(data, group, ..., minimumBucketScorePercentage,
+  maxNumberOfBuckets, arraySize, states = list()) {
+
+  group <- substitute(group)
+  keys <- names(group)[-1]
+  check.exprs(group)
+  group <- convert.exprs(group, data)
+
+  ## Multiplexer is removed if there is a single inner GLA
+  GLAs <- MultiplexerMake(..., data = data)
+  if (length(GLAs$GLA$args$glas) == 1)
+    aggregate <- GLAs$GLA$args$glas[[1]]$gla
+  else
+    aggregate <- GLAs$GLA
+
+  inputs <- c(group, GLAs$inputs)
+  outputs <- c("hashed_key")
+
+  gla <- GLA(statistics::Memory_Conscious_Hashing,
+    group = group,
+    aggregate = aggregate,
+    minimumBucketScorePercentage = minimumBucketScorePercentage,
+    maxNumberOfBuckets = maxNumberOfBuckets,
+    arraySize = arraySize)
+
+  Aggregate(data, gla, inputs, outputs, states)
+}
