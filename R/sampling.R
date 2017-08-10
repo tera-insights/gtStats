@@ -84,8 +84,8 @@ MemoryConsciousSampling <- function(data, minimumGroupSize,
   Aggregate(data, gla, inputs, outputs)
 }
 
-MemoryConsciousHashing <- function(data, group, ..., minimumBucketScorePercentage,
-  maxNumberOfBuckets, arraySize, states = list()) {
+MemoryConsciousHashing <- function(data, group, ..., minimumTotalScoreMultiplier,
+  maxNumberOfBucketsProduced, initialNumberOfBuckets, states = list()) {
 
   group <- substitute(group)
   keys <- names(group)[-1]
@@ -105,9 +105,9 @@ MemoryConsciousHashing <- function(data, group, ..., minimumBucketScorePercentag
   gla <- GLA(statistics::Memory_Conscious_Hashing,
     group = group,
     aggregate = aggregate,
-    minimumBucketScorePercentage = minimumBucketScorePercentage,
-    maxNumberOfBuckets = maxNumberOfBuckets,
-    arraySize = arraySize)
+    minimumTotalScoreMultiplier = minimumTotalScoreMultiplier,
+    maxNumberOfBucketsProduced = maxNumberOfBucketsProduced,
+    initialNumberOfBuckets = initialNumberOfBuckets)
 
   Aggregate(data, gla, inputs, outputs, states)
 }
