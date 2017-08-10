@@ -110,4 +110,3 @@ MemoryConsciousHashing <- function(data, group, ..., minimumBucketScorePercentag
     arraySize = arraySize)
 
   Aggregate(data, gla, inputs, outputs, states)
-}
