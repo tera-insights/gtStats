@@ -84,9 +84,7 @@ MemoryConsciousSampling <- function(data, minimumGroupSize,
   Aggregate(data, gla, inputs, outputs)
 }
 
-MemoryConsciousHashing <- function(data, group, ..., minimumBucketScorePercentage,
-  maxNumberOfBuckets, arraySize, states = list()) {
-
+MemoryConsciousHashing <- function(data, group, ..., minimumTotalScoreMultiplier,maxNumberOfBucketsProduced, initialNumberOfBuckets, numberOfSegments) {
   group <- substitute(group)
   keys <- names(group)[-1]
   check.exprs(group)
@@ -100,14 +98,24 @@ MemoryConsciousHashing <- function(data, group, ..., minimumBucketScorePercentag
     aggregate <- GLAs$GLA
 
   inputs <- c(group, GLAs$inputs)
-  outputs <- c("hashed_key")
+  outputs <- "state"
 
   gla <- GLA(statistics::Memory_Conscious_Hashing,
     group = group,
     aggregate = aggregate,
-    minimumBucketScorePercentage = minimumBucketScorePercentage,
-    maxNumberOfBuckets = maxNumberOfBuckets,
-    arraySize = arraySize)
+    minimumTotalScoreMultiplier = minimumTotalScoreMultiplier,
+    maxNumberOfBucketsProduced = maxNumberOfBucketsProduced,
+    initialNumberOfBuckets = initialNumberOfBuckets,
+    numberOfSegments = numberOfSegments)
+  Aggregate(data, gla, inputs, outputs)
+}
 
-  Aggregate(data, gla, inputs, outputs, states)
+HashToGroup <- function(data, group, hasher) {
+  group <- substitute(group)
+  keys <- names(group)[-1]
+  check.exprs(group)
+  group <- convert.exprs(group, data)
+
+  gf <- GF(statistics::Hash_To_Group, group)
+  Filter(data, gf, inputs = group, states = list(hasher))
 }
