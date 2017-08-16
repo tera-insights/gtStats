@@ -84,11 +84,7 @@ MemoryConsciousSampling <- function(data, minimumGroupSize,
   Aggregate(data, gla, inputs, outputs)
 }
 
-<<<<<<< HEAD
 MemoryConsciousHashing <- function(data, group, ..., minimumTotalScoreMultiplier,maxNumberOfBucketsProduced, initialNumberOfBuckets, numberOfSegments) {
-=======
-MemoryConsciousHashing <- function(data, group, ..., minimumTotalScoreMultiplier,maxNumberOfBucketsProduced, initialNumberOfBuckets, numberOfSegments, states = list()) {
->>>>>>> 1ccfd893ac46df4841b95c85520ef9493573fdc6
   group <- substitute(group)
   keys <- names(group)[-1]
   check.exprs(group)
